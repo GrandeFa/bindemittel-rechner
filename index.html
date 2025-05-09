@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Bindemittel Kostenrechner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            background-color: #111;
+            color: #f0f0f0;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        h1 {
+            color: #ffd700;
+            font-size: 28px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        label, input, select {
+            display: block;
+            margin-bottom: 15px;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        input[type="number"] {
+            width: 120px;
+            font-size: 18px;
+        }
+        .box {
+            background: #222;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .label {
+            display: inline-block;
+            width: 240px;
+        }
+        .value {
+            display: inline-block;
+            font-weight: bold;
+            color: #ffd700;
+            width: 100px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            font-size: 20px;
+            border-bottom: 1px solid #444;
+        }
+        .saving {
+            display: inline-block;
+            width: 90px;
+            text-align: right;
+            font-weight: bold;
+        }
+        .green { color: #66ff66; }
+        .red { color: #ff6666; }
+    </style>
+</head>
+<body>
+<h1>Bindemittel Kostenrechner</h1>
+<div class="section">
+    <label for="liter">Hier die Leckagemenge in Liter angeben</label>
+    <input type="number" id="liter" value="30">
+</div>
+<div class="section">
+    <button onclick="calculate()">Berechnen</button>
+</div>
+<!-- Ergebnisboxen folgen hier -->
+<script>
+function calculate() {
+  const liter = parseFloat(document.getElementById('liter').value);
+  const entsorgung = 0.93;
+  const format = val => "€ " + val.toFixed(2).replace('.', ',');
+  const percent = val => (val >= 0 ? "+" : "") + val.toFixed(2).replace('.', ',') + " %";
+}
+document.getElementById('liter').addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    calculate();
+  }
+});
+</script>
+</body>
+</html>
