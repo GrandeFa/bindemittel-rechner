@@ -74,13 +74,94 @@
 <div class="section">
     <button onclick="calculate()">Berechnen</button>
 </div>
-<!-- Ergebnisboxen folgen hier -->
+<div class="box">
+  <div class="section-title">Mineralisches Bindemittel</div>
+  <div><span class="label">Materialkosten:</span><span class="value" id="mat_mineral"></span></div>
+  <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_mineral"></span></div>
+  <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_mineral"></span></div>
+  <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_mineral"></span></div>
+  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_mineral"></span></div>
+</div>
+
+<div class="box">
+  <div class="section-title">INTOOL Bindemittel 3 kg</div>
+  <div><span class="label">Materialkosten:</span><span class="value" id="mat_3kg"></span><span class="saving" id="diff_mat_3kg"></span></div>
+  <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_3kg"></span><span class="saving" id="diff_weit_3kg"></span></div>
+  <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_3kg"></span><span class="saving" id="diff_arbeit_3kg"></span></div>
+  <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_3kg"></span></div>
+  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_3kg"></span><span class="saving" id="diff_gesamt_3kg"></span></div>
+</div>
+
+<div class="box">
+  <div class="section-title">INTOOL Bindemittel 6 kg</div>
+  <div><span class="label">Materialkosten:</span><span class="value" id="mat_6kg"></span><span class="saving" id="diff_mat_6kg"></span></div>
+  <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_6kg"></span><span class="saving" id="diff_weit_6kg"></span></div>
+  <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_6kg"></span><span class="saving" id="diff_arbeit_6kg"></span></div>
+  <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_6kg"></span></div>
+  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_6kg"></span><span class="saving" id="diff_gesamt_6kg"></span></div>
+</div>
+
 <script>
 function calculate() {
   const liter = parseFloat(document.getElementById('liter').value);
   const entsorgung = 0.93;
   const format = val => "€ " + val.toFixed(2).replace('.', ',');
   const percent = val => (val >= 0 ? "+" : "") + val.toFixed(2).replace('.', ',') + " %";
+
+  const menge_mineral = liter / 0.8;
+  const mat_m = menge_mineral * 2;
+  const weit_m = menge_mineral * 0.43;
+  const arbeit_m = menge_mineral * (0.5 * 41.3);
+  const entsorg = liter * entsorgung;
+  const gesamt_m = mat_m + weit_m + arbeit_m + entsorg;
+
+  document.getElementById("mat_mineral").textContent = format(mat_m);
+  document.getElementById("weitere_mineral").textContent = format(weit_m);
+  document.getElementById("arbeit_mineral").textContent = format(arbeit_m);
+  document.getElementById("entsorgung_mineral").textContent = format(entsorg);
+  document.getElementById("gesamt_mineral").textContent = format(gesamt_m);
+
+  const menge_3kg = liter / 6.5;
+  const mat_3 = menge_3kg * 19.97;
+  const weit_3 = menge_3kg * 0.43;
+  const arbeit_3 = menge_3kg * (0.5 * 41.3);
+  const gesamt_3 = mat_3 + weit_3 + arbeit_3 + entsorg;
+
+  document.getElementById("mat_3kg").textContent = format(mat_3);
+  document.getElementById("weitere_3kg").textContent = format(weit_3);
+  document.getElementById("arbeit_3kg").textContent = format(arbeit_3);
+  document.getElementById("entsorgung_3kg").textContent = format(entsorg);
+  document.getElementById("gesamt_3kg").textContent = format(gesamt_3);
+
+  document.getElementById("diff_mat_3kg").textContent = percent(((mat_m - mat_3) / mat_m) * 100);
+  document.getElementById("diff_weit_3kg").textContent = percent(((weit_m - weit_3) / weit_m) * 100);
+  document.getElementById("diff_arbeit_3kg").textContent = percent(((arbeit_m - arbeit_3) / arbeit_m) * 100);
+  document.getElementById("diff_gesamt_3kg").textContent = percent(((gesamt_m - gesamt_3) / gesamt_m) * 100);
+  document.getElementById("diff_mat_3kg").className = "saving " + (mat_3 < mat_m ? "green" : "red");
+  document.getElementById("diff_weit_3kg").className = "saving " + (weit_3 < weit_m ? "green" : "red");
+  document.getElementById("diff_arbeit_3kg").className = "saving " + (arbeit_3 < arbeit_m ? "green" : "red");
+  document.getElementById("diff_gesamt_3kg").className = "saving " + (gesamt_3 < gesamt_m ? "green" : "red");
+
+  const menge_6kg = liter / 10;
+  const mat_6 = menge_6kg * 15.99;
+  const weit_6 = menge_6kg * 0.43;
+  const arbeit_6 = menge_6kg * (0.5 * 41.3);
+  const gesamt_6 = mat_6 + weit_6 + arbeit_6 + entsorg;
+
+  document.getElementById("mat_6kg").textContent = format(mat_6);
+  document.getElementById("weitere_6kg").textContent = format(weit_6);
+  document.getElementById("arbeit_6kg").textContent = format(arbeit_6);
+  document.getElementById("entsorgung_6kg").textContent = format(entsorg);
+  document.getElementById("gesamt_6kg").textContent = format(gesamt_6);
+
+  document.getElementById("diff_mat_6kg").textContent = percent(((mat_m - mat_6) / mat_m) * 100);
+  document.getElementById("diff_weit_6kg").textContent = percent(((weit_m - weit_6) / weit_m) * 100);
+  document.getElementById("diff_arbeit_6kg").textContent = percent(((arbeit_m - arbeit_6) / arbeit_m) * 100);
+  document.getElementById("diff_gesamt_6kg").textContent = percent(((gesamt_m - gesamt_6) / gesamt_m) * 100);
+  document.getElementById("diff_mat_6kg").className = "saving " + (mat_6 < mat_m ? "green" : "red");
+  document.getElementById("diff_weit_6kg").className = "saving " + (weit_6 < weit_m ? "green" : "red");
+  document.getElementById("diff_arbeit_6kg").className = "saving " + (arbeit_6 < arbeit_m ? "green" : "red");
+  document.getElementById("diff_gesamt_6kg").className = "saving " + (gesamt_6 < gesamt_m ? "green" : "red");
 }
 document.getElementById('liter').addEventListener('keydown', function(event) {
   if (event.key === 'Enter') {
