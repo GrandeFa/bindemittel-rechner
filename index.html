@@ -14,7 +14,7 @@
             font-size: 18px;
         }
         h1 {
-            color: #ffd700;
+            color: #ffd300;
             font-size: 28px;
         }
         .section {
@@ -45,7 +45,7 @@
         .value {
             display: inline-block;
             font-weight: bold;
-            color: #ffd700;
+            color: #ffd300;
             width: 100px;
         }
         .section-title {
@@ -80,7 +80,7 @@
   <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_mineral"></span></div>
   <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_mineral"></span></div>
   <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_mineral"></span></div>
-  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_mineral"></span></div>
+  <div style="border-top: 1px solid #666; margin-top: 15px; padding-top: 10px;"><span class="label" style="color:#ffd300">Gesamtkosten:</span><span class="value" id="gesamt_mineral"></span></div>
 </div>
 
 <div class="box">
@@ -89,7 +89,7 @@
   <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_3kg"></span><span class="saving" id="diff_weit_3kg"></span></div>
   <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_3kg"></span><span class="saving" id="diff_arbeit_3kg"></span></div>
   <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_3kg"></span></div>
-  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_3kg"></span><span class="saving" id="diff_gesamt_3kg"></span></div>
+  <div style="border-top: 1px solid #666; margin-top: 15px; padding-top: 10px;"><span class="label" style="color:#ffd300">Gesamtkosten:</span><span class="value" id="gesamt_3kg"></span><span class="saving" id="diff_gesamt_3kg"></span></div>
 </div>
 
 <div class="box">
@@ -98,7 +98,7 @@
   <div><span class="label">Weitere Kosten:</span><span class="value" id="weitere_6kg"></span><span class="saving" id="diff_weit_6kg"></span></div>
   <div><span class="label">Arbeitskosten:</span><span class="value" id="arbeit_6kg"></span><span class="saving" id="diff_arbeit_6kg"></span></div>
   <div><span class="label">Entsorgungskosten:</span><span class="value" id="entsorgung_6kg"></span></div>
-  <div><span class="label">Gesamtkosten:</span><span class="value" id="gesamt_6kg"></span><span class="saving" id="diff_gesamt_6kg"></span></div>
+  <div style="border-top: 1px solid #666; margin-top: 15px; padding-top: 10px;"><span class="label" style="color:#ffd300">Gesamtkosten:</span><span class="value" id="gesamt_6kg"></span><span class="saving" id="diff_gesamt_6kg"></span></div>
 </div>
 
 <script>
@@ -109,10 +109,15 @@ function calculate() {
   const percent = val => (val >= 0 ? "+" : "") + val.toFixed(2).replace('.', ',') + " %";
 
   const menge_mineral = liter / 0.8;
-  const mat_m = menge_mineral * 2;
-  const weit_m = menge_mineral * 0.43;
-  const arbeit_m = menge_mineral * (0.5 * 41.3);
-  const entsorg = liter * entsorgung;
+  const preis_pro_sack = 39.90;
+  const fuellmenge_sack = 20.0;
+  const preis_pro_kg = preis_pro_sack / fuellmenge_sack;
+  const mat_m = menge_mineral * preis_pro_kg;
+  const weit_m = menge_mineral * (0.03 + 0.4);
+  const arbeit_m_zeit = (((15 + 20 + 20 + 25 + 30) / 60 - 30 / 60) * 2);
+  const arbeit_m = (((15 + 20 + 20 + 25 + 30) / 60 - 30 / 60) * 2) * 41.3;
+  const gesamtmasse_mineral = menge_mineral + liter;
+  const entsorg = gesamtmasse_mineral * 0.25;
   const gesamt_m = mat_m + weit_m + arbeit_m + entsorg;
 
   document.getElementById("mat_mineral").textContent = format(mat_m);
@@ -122,15 +127,21 @@ function calculate() {
   document.getElementById("gesamt_mineral").textContent = format(gesamt_m);
 
   const menge_3kg = liter / 6.5;
-  const mat_3 = menge_3kg * 19.97;
-  const weit_3 = menge_3kg * 0.43;
-  const arbeit_3 = menge_3kg * (0.5 * 41.3);
-  const gesamt_3 = mat_3 + weit_3 + arbeit_3 + entsorg;
+  const preis_sack_3kg = 59.90;
+  const fuellmenge_3kg = 3.00;
+  const preis_pro_kg_3 = preis_sack_3kg / fuellmenge_3kg;
+  const mat_3 = menge_3kg * preis_pro_kg_3;
+  const weit_3 = menge_3kg * (0.03 + 0.4);
+  const arbeit_3_zeit = (((10 + 10 + 5 + 10) / 60 - 30 / 60) * 1);
+  const arbeit_3 = arbeit_3_zeit * 41.3;
+  const gesamtmasse_3 = menge_3kg + liter;
+  const entsorg_3 = gesamtmasse_3 * 0.25;
+  const gesamt_3 = mat_3 + weit_3 + arbeit_3 + entsorg_3;
 
   document.getElementById("mat_3kg").textContent = format(mat_3);
   document.getElementById("weitere_3kg").textContent = format(weit_3);
   document.getElementById("arbeit_3kg").textContent = format(arbeit_3);
-  document.getElementById("entsorgung_3kg").textContent = format(entsorg);
+  document.getElementById("entsorgung_3kg").textContent = format(entsorg_3);
   document.getElementById("gesamt_3kg").textContent = format(gesamt_3);
 
   document.getElementById("diff_mat_3kg").textContent = percent(((mat_m - mat_3) / mat_m) * 100);
@@ -143,15 +154,21 @@ function calculate() {
   document.getElementById("diff_gesamt_3kg").className = "saving " + (gesamt_3 < gesamt_m ? "green" : "red");
 
   const menge_6kg = liter / 10;
-  const mat_6 = menge_6kg * 15.99;
-  const weit_6 = menge_6kg * 0.43;
-  const arbeit_6 = menge_6kg * (0.5 * 41.3);
-  const gesamt_6 = mat_6 + weit_6 + arbeit_6 + entsorg;
+  const preis_sack_6kg = 89.90;
+  const fuellmenge_6kg = 6.00;
+  const preis_pro_kg_6 = preis_sack_6kg / fuellmenge_6kg;
+  const mat_6 = menge_6kg * preis_pro_kg_6;
+  const weit_6 = menge_6kg * (0.03 + 0.4);
+  const arbeit_6_zeit = (((10 + 10 + 5 + 10) / 60 - 30 / 60) * 1);
+  const arbeit_6 = arbeit_6_zeit * 41.3;
+  const gesamtmasse_6 = menge_6kg + liter;
+  const entsorg_6 = gesamtmasse_6 * 0.25;
+  const gesamt_6 = mat_6 + weit_6 + arbeit_6 + entsorg_6;
 
   document.getElementById("mat_6kg").textContent = format(mat_6);
   document.getElementById("weitere_6kg").textContent = format(weit_6);
   document.getElementById("arbeit_6kg").textContent = format(arbeit_6);
-  document.getElementById("entsorgung_6kg").textContent = format(entsorg);
+  document.getElementById("entsorgung_6kg").textContent = format(entsorg_6);
   document.getElementById("gesamt_6kg").textContent = format(gesamt_6);
 
   document.getElementById("diff_mat_6kg").textContent = percent(((mat_m - mat_6) / mat_m) * 100);
